@@ -8,7 +8,6 @@ uint8_t isFifoFull(fifo *c) {
     }
 }
 
-
 uint8_t isFifoEmpty(fifo *c) {
     if (c->write == c->read) {
 	return 1;

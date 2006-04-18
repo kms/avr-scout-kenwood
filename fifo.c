@@ -21,14 +21,14 @@ void fifoPut(fifo *c, uint8_t p) {
 fifo* fifoCreate(uint8_t size) {
     fifo *f = malloc(sizeof(fifo));
 
-    if (f == 0) {
+    if (f == NULL) {
 	for (;;) {
 	}
     }
 
     f->buffer = malloc(size * sizeof(uint8_t));
 
-    if (f->buffer == 0) {
+    if (f->buffer == NULL) {
 	for (;;) {
 	}
     }

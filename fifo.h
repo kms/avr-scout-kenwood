@@ -5,10 +5,10 @@
 #endif
 
 typedef struct {
+    uint8_t *buffer;
     uint8_t size;
     volatile uint8_t read;
     volatile uint8_t write;
-    uint8_t *buffer;
 } fifo;
 
 uint8_t isFifoFull(fifo *c);

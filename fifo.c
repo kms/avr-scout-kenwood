@@ -1,19 +1,11 @@
 #include "fifo.h"
 
 uint8_t isFifoFull(fifo *c) {
-    if (((c->write + 1) % c->size) == c->read) {
-	return 1;
-    } else {
-	return 0;
-    }
+    return ((c->write + 1) % c->size) == c->read;
 }
 
 uint8_t isFifoEmpty(fifo *c) {
-    if (c->write == c->read) {
-	return 1;
-    } else {
-	return 0;
-    }
+    return c->write == c->read;
 } 
 
 uint8_t fifoGet(fifo *c) {

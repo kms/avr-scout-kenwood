@@ -1,11 +1,51 @@
 #include <check.h>
 #include "fifo.h"
 
-START_TEST (test_create)
-{
- fifo f;
+START_TEST(test_create) {
+ fifo *f;
+
+ f = fifoCreate(16);
  
- fail_unless(isFifoEmpty(f) == 1);
+ fail_if(isFifoEmpty(f) == 0);
  fail_if(isFifoFull(f) == 1);
+} END_TEST
+
+START_TEST(test_fillup) {
+ fifo *f;
+
+ f = fifoCreate(2);
+ 
+ fail_if(isFifoEmpty(f) == 0);
+ fail_if(isFifoFull(f) == 1);
+
+ fifoPut(f, 0);
+ 
+ fail_if(isFifoEmpty(f) == 1);
+ fail_if(isFifoFull(f) == 1);
+ 
+ fifoPut(f, 1);
+ 
+ fail_if(isFifoEmpty(f) == 1);
+ fail_if(isFifoFull(f) == 0);
+} END_TEST
+
+Suite *fifo_suite(void) {
+  Suite *s = suite_create("FIFO");
+  TCase *tc_core = tcase_create("Core");
+
+  suite_add_tcase(s, tc_core);
+  tcase_add_test(tc_core, test_create);
+  tcase_add_test(tc_core, test_fillup);
+
+  return s;
 }
-END_TEST
+
+int main(void) {
+  int nf;
+  Suite *s = fifo_suite();
+  SRunner *sr = srunner_create(s);
+  srunner_run_all(sr, CK_NORMAL);
+  nf = srunner_ntests_failed(sr);
+  srunner_free(sr);
+  return (nf == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+}

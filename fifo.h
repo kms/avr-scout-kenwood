@@ -1,6 +1,8 @@
 #include <stdlib.h>
 
+#ifndef uint8_t
 #define uint8_t int
+#endif
 
 typedef struct {
     uint8_t size;

@@ -23,15 +23,27 @@ uint8_t fifoGet(fifo *c) {
 
 void fifoPut(fifo *c, uint8_t p) {
     c->write = (c->write + 1) % c->size;
-    *c->buffer[c->write] = p;
+    c->buffer[c->write] = p;
 }
 
 fifo* fifoCreate(uint8_t size) {
-    fifo *f = (fifo*) malloc(sizeof(fifo));
+    fifo *f = malloc(sizeof(fifo));
 
-    f->buffer = (uint8_t*) malloc(size * sizeof(uint8_t));
+    if (f == 0) {
+	for (;;) {
+	}
+    }
+
+    f->buffer = malloc(size * sizeof(uint8_t));
+
+    if (f->buffer == 0) {
+	for (;;) {
+	}
+    }
+    
     f->read = 0;
     f->write = 0;
+    f->size = size + 1;
 
     return f;
 }   

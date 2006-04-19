@@ -3,8 +3,12 @@
 
 int main(void) {
   int nf;
-  Suite *s = fifo_suite();
-  SRunner *sr = srunner_create(s);
+  
+  SRunner *sr = srunner_create(fifo_suite());
+  
+  srunner_add_suite(sr, fRound_suite());
+  srunner_add_suite(sr, parser_suite());
+  
   srunner_run_all(sr, CK_NORMAL);
   nf = srunner_ntests_failed(sr);
   srunner_free(sr);

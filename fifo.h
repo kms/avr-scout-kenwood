@@ -1,8 +1,4 @@
-#include <stdlib.h>
-
-#ifndef uint8_t
-#define uint8_t int
-#endif
+#include <stdint.h>
 
 typedef struct {
     uint8_t *buffer;

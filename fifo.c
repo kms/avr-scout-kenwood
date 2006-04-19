@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "fifo.h"
 
 uint8_t isFifoFull(fifo *c) {

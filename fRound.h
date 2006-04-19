@@ -1,17 +1,4 @@
-#include <stdlib.h>
-
-#ifndef FROUNDH_LOADED
-#define FROUNDH_LOADED
-
-#ifndef uint8_t
-#define uint8_t int
-#endif
-#ifndef uint16_t
-#define uint16_t int
-#endif
-#ifndef uint32_t
-#define uint32_t long
-#endif
+#include <stdint.h>
 
 typedef struct {
     volatile uint32_t lower;
@@ -35,4 +22,3 @@ freq_bands bands[NUMBER_OF_BANDS] = {
 
 uint8_t findBand(uint32_t freq);
 uint32_t roundFreq(uint32_t freq);
-#endif

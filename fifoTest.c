@@ -1,5 +1,6 @@
 #include <check.h>
 #include "fifo.h"
+#include "testSuites.h"
 
 START_TEST(test_create) {
  fifo *f;
@@ -63,14 +64,4 @@ Suite *fifo_suite(void) {
   tcase_add_test(tc_core, test_putget);
 
   return s;
-}
-
-int main(void) {
-  int nf;
-  Suite *s = fifo_suite();
-  SRunner *sr = srunner_create(s);
-  srunner_run_all(sr, CK_NORMAL);
-  nf = srunner_ntests_failed(sr);
-  srunner_free(sr);
-  return (nf == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

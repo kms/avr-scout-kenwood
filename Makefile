@@ -11,7 +11,11 @@
 
 	TRG     = scout-f7
 
-	SRC 	= $(TRG).c fifo.c
+	TESTS	= fifoTest.c fRoundTest.c parserTest.c
+	TESTABLES = fifo.c fRound.c parser.c
+	TESTRUNNER = testRunner
+
+	SRC 	= $(TRG).c $(TESTABLES)
 
 #put additional assembler source file here
 	ASRC 	=
@@ -42,6 +46,8 @@
 	SIZE	= avr-size
 	INCDIR	= .
 	AVRLIB	= avrlib
+
+	TESTCC	= gcc
 
 ### BLOCK 2) output format can be srec, ihex (avrobj is always created) ####
 
@@ -111,6 +117,7 @@ clean:
 	$(RM) $(TRG).hex
 	$(RM) *.bak
 	$(RM) *.log
+	$(RM) $(TESTRUNNER)
 	@echo "Errors: none"
 	
 size:
@@ -119,3 +126,8 @@ size:
 up:
 	avrdude -p $(MCU) -c stk500v2 -U flash:w:$(TRG).hex  -v
 #	-U eeprom:w:$(TRG).eep -v
+#
+
+test:
+	$(TESTCC) -o $(TESTRUNNER) $(TESTABLES) $(TESTS) $(TESTRUNNER).c -lcheck
+	./$(TESTRUNNER)

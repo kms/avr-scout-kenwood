@@ -8,6 +8,8 @@
 #include <util/delay.h>
 #include <stdlib.h>
 #include "fifo.h"
+#include "fRound.h"
+#include "parser.h"
 
 fifo c;
 

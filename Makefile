@@ -24,7 +24,7 @@
 	LIB	=
 
 #additional includes to compile
-	INC	= 
+	INC	= fRound.h fifo.h parser.h testSuites.h
 
 #assembler flags
 	ASFLAGS = -Wa, -gstabs

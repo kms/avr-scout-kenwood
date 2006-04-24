@@ -45,11 +45,11 @@ START_TEST(test_putget) {
  fail_if(isFifoEmpty(f) == 1);
  fail_if(isFifoFull(f) == 0);
  
- fifoGet(f);
+ fail_if(fifoGet(f) != 0);
  fail_if(isFifoEmpty(f) == 1);
  fail_if(isFifoFull(f) == 1);
  
- fifoGet(f);
+ fail_if(fifoGet(f) != 1);
  fail_if(isFifoEmpty(f) == 0);
  fail_if(isFifoFull(f) == 1);
 } END_TEST

@@ -95,3 +95,4 @@ ISR(USART_RX_vect) {
 	fifoPut(&c, d);
     }
 }
+

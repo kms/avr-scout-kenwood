@@ -7,13 +7,14 @@
 #include <avr/wdt.h>
 #include <util/delay.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "fifo.h"
 #include "fRound.h"
 #include "parser.h"
 
-fifo c;
+fifo *c;
 
-void uartTx(uint8_t a[], uint8_t len) {
+void uartTx(uint8_t *a, uint8_t len) {
     uint8_t i;
 
     // TX contents of array
@@ -29,20 +30,9 @@ void uartTx(uint8_t a[], uint8_t len) {
     }
 }
 
-void delay_1s() {
-    uint8_t i;
-
-    for (i = 0; i < 100; i++) {
-	_delay_ms(10);
-    }
-}
-
 int main(void) {
     wdt_reset();
     wdt_disable();
-
-    c.read = 0;
-    c.write = 0;
 
     // Enable pull-ups
     PORTB = 0xff;
@@ -60,28 +50,47 @@ int main(void) {
 	uint8_t c = UDR0;
     }
 
+    c = fifoCreate(64);
+
     // Go!
     wdt_reset();
     //wdt_enable(WDTO_500MS);
 
-    uint8_t l[] = {'l', 'a'};
-    uartTx(l, 2);
-
     sei();
 
-    fifoPut(&c, 'd');
-    fifoPut(&c, 'i');
+    fifoPut(c, '\r');
+    fifoPut(c, '\n');
+
+    uint8_t h;
+    uint8_t i;
+    uint32_t freq;
+    uint8_t str[32];
 
     for (;;) {
-	if (!isFifoEmpty(&c)) {
-	    while (!(UCSR0A & _BV(UDRE0))) {
+	if (fifoSize(c) >= 8) {
+	    if ((h = fifoGet(c)) != 'R') {
+		continue;
 	    }
 
-	    UDR0 = fifoGet(&c);
-
-	    // Spin until all data is sent
-	    while (!(UCSR0A & _BV(UDRE0))) {
+	    if ((h = fifoGet(c)) != 'F') {
+		continue;
 	    }
+
+	    freq = 0;
+
+	    freq += (60 - fifoGet(c)) * 1000000000UL;
+	    freq += (60 - fifoGet(c)) * 100000000UL;
+	    freq += (60 - fifoGet(c)) * 10000000UL;
+	    freq += (60 - fifoGet(c)) * 1000000UL;
+	    freq += (60 - fifoGet(c)) * 100000UL;
+	    freq += (60 - fifoGet(c)) * 10000UL;
+	    freq += (60 - fifoGet(c)) * 1000UL;
+	    freq += (60 - fifoGet(c)) * 100UL;
+	    freq += (60 - fifoGet(c)) * 10UL;
+	    freq += (60 - fifoGet(c));
+
+	    sprintf(str, "FQ %li,3\r\n", freq);
+	    uartTx(str, 17);
 	}
     }
 
@@ -89,10 +98,7 @@ int main(void) {
 }
 
 ISR(USART_RX_vect) {
-    fifoPut(&c, 'x');
     while (UCSR0A & _BV(RXC0)) {
-	uint8_t d = UDR0;
-	fifoPut(&c, d);
+	fifoPut(c, UDR0);
     }
 }
-

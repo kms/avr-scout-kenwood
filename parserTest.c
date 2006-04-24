@@ -3,7 +3,6 @@
 #include "testSuites.h"
 
 START_TEST(test_create) {
-    
 } END_TEST
 
 Suite *parser_suite(void) {

@@ -9,18 +9,12 @@ uint8_t isFifoEmpty(fifo *c) {
     return c->write == c->read;
 } 
 
-uint8_t fifoSize(fifo *c) {
-    return c->size;
-} 
-
 uint8_t fifoGet(fifo *c) {
-    c->size--;
     c->read = (c->read + 1) % c->capacity;
     return c->buffer[c->read];
 }       
 
 void fifoPut(fifo *c, uint8_t p) {
-    c->size++;
     c->write = (c->write + 1) % c->capacity;
     c->buffer[c->write] = p;
 }
@@ -42,7 +36,6 @@ fifo* fifoCreate(uint8_t capacity) {
     
     f->read = 0;
     f->write = 0;
-    f->size = 0;
     f->capacity = capacity + 1;
 
     return f;

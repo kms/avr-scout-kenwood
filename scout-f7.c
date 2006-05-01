@@ -8,22 +8,12 @@
 #include <util/delay.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "fifo.h"
 #include "fRound.h"
 #include "parser.h"
-#include "fifo.h"
 
-fifo *f;
+fifo *c;
 parser *p;
-
-void uartTxSingle(char a) {
-    while (!(UCSR0A & _BV(UDRE0))) {
-    }
-
-    UDR0 = a;
-
-    while (!(UCSR0A & _BV(UDRE0))) {
-    }
-}
 
 void uartTx(char *a) {
     // TX contents of array
@@ -31,9 +21,10 @@ void uartTx(char *a) {
 	while (!(UCSR0A & _BV(UDRE0))) {
 	}
 
-	UDR0 = *a++;
+	UDR0 = *a;
     }
 
+    // Spin until all data is sent
     while (!(UCSR0A & _BV(UDRE0))) {
     }
 }
@@ -58,7 +49,7 @@ int main(void) {
 	uint8_t c = UDR0;
     }
 
-    f = fifoCreate(64);
+    c = fifoCreate(64);
     p = createParser();
 
     // Go!
@@ -67,18 +58,15 @@ int main(void) {
 
     sei();
 
-    char str[64];
+    char str[32];
     uint32_t u;
 
     for (;;) {
-	if (!isFifoEmpty(f)) {
-	    parseChar(p, fifoGet(f));
-	}
-
 	if (p->state == COMPLETE) {
 	    u = parseInteger(p);
-	    sprintf(str, "\r\nFQ %li,3 (%li)\r\n", roundFreq(u), u);
+	    sprintf(str, "FQ %li,3 (%li)\r\n", roundFreq(p), p);
 	    uartTx(str);
+	    resetParser(p);
 	}
     }
 
@@ -86,11 +74,8 @@ int main(void) {
 }
 
 ISR(USART_RX_vect) {
-    uint8_t c;
-    
     while (UCSR0A & _BV(RXC0)) {
-	c = UDR0;
-	fifoPut(f, c);
-	uartTxSingle(c);
+	parseChar(p, UDR0);
     }
 }
+

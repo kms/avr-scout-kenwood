@@ -9,6 +9,7 @@ START_TEST(test_create) {
 
     fail_if(isFifoEmpty(f) == 0);
     fail_if(isFifoFull(f) == 1);
+    fail_if(fifoSize(f) != 0);
 } END_TEST
 
 START_TEST(test_fillup) {
@@ -21,11 +22,13 @@ START_TEST(test_fillup) {
 
     fifoPut(f, 0);
 
+    fail_if(fifoSize(f) != 1);
     fail_if(isFifoEmpty(f) == 1);
     fail_if(isFifoFull(f) == 1);
 
     fifoPut(f, 1);
 
+    fail_if(fifoSize(f) != 2);
     fail_if(isFifoEmpty(f) == 1);
     fail_if(isFifoFull(f) == 0);
 } END_TEST
@@ -36,20 +39,25 @@ START_TEST(test_putget) {
     f = fifoCreate(2);
 
     fifoPut(f, 0);
+    fail_if(fifoSize(f) != 1);
     fifoGet(f);
+    fail_if(fifoSize(f) != 0);
     fail_if(isFifoEmpty(f) == 0);
     fail_if(isFifoFull(f) == 1);
 
     fifoPut(f, 0);
     fifoPut(f, 1);
+    fail_if(fifoSize(f) != 2);
     fail_if(isFifoEmpty(f) == 1);
     fail_if(isFifoFull(f) == 0);
 
     fail_if(fifoGet(f) != 0);
+    fail_if(fifoSize(f) != 1);
     fail_if(isFifoEmpty(f) == 1);
     fail_if(isFifoFull(f) == 1);
 
     fail_if(fifoGet(f) != 1);
+    fail_if(fifoSize(f) != 0);
     fail_if(isFifoEmpty(f) == 0);
     fail_if(isFifoFull(f) == 1);
 } END_TEST

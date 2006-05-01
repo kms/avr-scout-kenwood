@@ -12,8 +12,9 @@ typedef struct {
     uint8_t digit[10];
 } parser;
 
-parser* createParser();
+parser* createParser(void);
 void resetParser(parser *p);
 void parseChar(parser *p, uint8_t c);
+uint32_t parseInteger(parser *p);
 
 #endif

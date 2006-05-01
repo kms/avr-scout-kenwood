@@ -13,8 +13,9 @@
 #include "parser.h"
 
 fifo *c;
+parser *p;
 
-void uartTx(uint8_t *a, uint8_t len) {
+void uartTx(char *a, uint8_t len) {
     uint8_t i;
 
     // TX contents of array
@@ -51,6 +52,7 @@ int main(void) {
     }
 
     c = fifoCreate(64);
+    p = createParser();
 
     // Go!
     wdt_reset();
@@ -58,39 +60,13 @@ int main(void) {
 
     sei();
 
-    fifoPut(c, '\r');
-    fifoPut(c, '\n');
-
-    uint8_t h;
-    uint8_t i;
-    uint32_t freq;
-    uint8_t str[32];
+    char str[32];
 
     for (;;) {
-	if (fifoSize(c) >= 8) {
-	    if ((h = fifoGet(c)) != 'R') {
-		continue;
-	    }
-
-	    if ((h = fifoGet(c)) != 'F') {
-		continue;
-	    }
-
-	    freq = 0;
-
-	    freq += (60 - fifoGet(c)) * 1000000000UL;
-	    freq += (60 - fifoGet(c)) * 100000000UL;
-	    freq += (60 - fifoGet(c)) * 10000000UL;
-	    freq += (60 - fifoGet(c)) * 1000000UL;
-	    freq += (60 - fifoGet(c)) * 100000UL;
-	    freq += (60 - fifoGet(c)) * 10000UL;
-	    freq += (60 - fifoGet(c)) * 1000UL;
-	    freq += (60 - fifoGet(c)) * 100UL;
-	    freq += (60 - fifoGet(c)) * 10UL;
-	    freq += (60 - fifoGet(c));
-
-	    sprintf(str, "FQ %li,3\r\n", freq);
+	if (p->state == COMPLETE) {
+	    sprintf(str, "FQ %li,3\r\n", roundFreq(parseInteger(p)));
 	    uartTx(str, 17);
+	    resetParser(p);
 	}
     }
 
@@ -99,6 +75,6 @@ int main(void) {
 
 ISR(USART_RX_vect) {
     while (UCSR0A & _BV(RXC0)) {
-	fifoPut(c, UDR0);
+	parseChar(p, UDR0);
     }
 }

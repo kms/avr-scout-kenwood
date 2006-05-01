@@ -2,7 +2,7 @@
 #include "parser.h"
 #include "fifo.h"
 
-parser* createParser() {
+parser* createParser(void) {
     parser *p = malloc(sizeof(parser));
 
     p->state = R;
@@ -30,6 +30,7 @@ void parseChar(parser *p, uint8_t c) {
 		p->state = DIGITS;
 	    } else {
 		resetParser(p);
+		parseChar(p, c);
 	    }
 	    break;
 	case DIGITS:
@@ -41,6 +42,7 @@ void parseChar(parser *p, uint8_t c) {
 		}
 	    } else {
 		resetParser(p);
+		parseChar(p, c);
 	    }
 	    break;
 	case CARRIAGE_RETURN:
@@ -48,6 +50,7 @@ void parseChar(parser *p, uint8_t c) {
 		p->state = NEWLINE;
 	    } else {
 		resetParser(p);
+		parseChar(p, c);
 	    }
 	    break;
 	case NEWLINE:
@@ -55,6 +58,7 @@ void parseChar(parser *p, uint8_t c) {
 		p->state = COMPLETE;
 	    } else {
 		resetParser(p);
+		parseChar(p, c);
 	    }
 	    break;
 	case COMPLETE:
@@ -63,4 +67,21 @@ void parseChar(parser *p, uint8_t c) {
 	    resetParser(p);
 	    break;
     }
+}
+
+uint32_t parseInteger(parser *p) {
+    uint32_t i = 0;
+
+    i += p->digit[0] * 1000000000;
+    i += p->digit[1] * 100000000;
+    i += p->digit[2] * 10000000;
+    i += p->digit[3] * 1000000;
+    i += p->digit[4] * 100000;
+    i += p->digit[5] * 10000;
+    i += p->digit[6] * 1000;
+    i += p->digit[7] * 100;
+    i += p->digit[8] * 10;
+    i += p->digit[9];
+
+    return i;
 }

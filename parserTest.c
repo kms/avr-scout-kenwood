@@ -51,10 +51,40 @@ START_TEST(test_parseChar) {
     fail_if(p->digit[9] != 0);
 } END_TEST
 
-START_TEST(test_parseCharTooFewDigits) {
+START_TEST(test_parseCharTooFewDigits1) {
+    parser *p = createParser();
+    parseChar(p, 'R');
+    parseChar(p, 'F');
+    parseChar(p, 'R');
+    fail_if(p->state != F);
+} END_TEST
+
+START_TEST(test_parseCharTooFewDigits2) {
+    parser *p = createParser();
+    parseChar(p, 'R');
+    parseChar(p, 'F');
+    parseChar(p, '1');
+    parseChar(p, '2');
+    parseChar(p, 'R');
+    fail_if(p->state != F);
 } END_TEST
 
 START_TEST(test_parseCharTooManyDigits) {
+    parser *p = createParser();
+    parseChar(p, 'R');
+    parseChar(p, 'F');
+    parseChar(p, '1');
+    parseChar(p, '2');
+    parseChar(p, '3');
+    parseChar(p, '4');
+    parseChar(p, '5');
+    parseChar(p, '6');
+    parseChar(p, '7');
+    parseChar(p, '8');
+    parseChar(p, '9');
+    parseChar(p, '0');
+    parseChar(p, '1');
+    fail_if(p->state != R);
 } END_TEST
 
 START_TEST(test_resetParser) {
@@ -66,6 +96,82 @@ START_TEST(test_resetParser) {
     fail_if(p->digits != 0);
 } END_TEST
 
+START_TEST(test_parseInteger) {
+    parser *p = createParser();
+    
+    parseChar(p, 'R');
+    parseChar(p, 'F');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '\r');
+    parseChar(p, '\n');
+    fail_if(p->state != COMPLETE);
+    fail_if(parseInteger(p) != 0);
+    resetParser(p);
+    
+    parseChar(p, 'R');
+    parseChar(p, 'F');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '1');
+    parseChar(p, '\r');
+    parseChar(p, '\n');
+    fail_if(p->state != COMPLETE);
+    fail_if(parseInteger(p) != 1);
+    resetParser(p);
+    
+    parseChar(p, 'R');
+    parseChar(p, 'F');
+    parseChar(p, '0');
+    parseChar(p, '1');
+    parseChar(p, '2');
+    parseChar(p, '3');
+    parseChar(p, '4');
+    parseChar(p, '5');
+    parseChar(p, '6');
+    parseChar(p, '7');
+    parseChar(p, '8');
+    parseChar(p, '9');
+    parseChar(p, '\r');
+    parseChar(p, '\n');
+    fail_if(p->state != COMPLETE);
+    fail_if(parseInteger(p) != 123456789);
+    resetParser(p);
+    
+    parseChar(p, 'R');
+    parseChar(p, 'F');
+    parseChar(p, '3');
+    parseChar(p, '9');
+    parseChar(p, '9');
+    parseChar(p, '9');
+    parseChar(p, '9');
+    parseChar(p, '9');
+    parseChar(p, '9');
+    parseChar(p, '9');
+    parseChar(p, '9');
+    parseChar(p, '9');
+    parseChar(p, '\r');
+    parseChar(p, '\n');
+    fail_if(p->state != COMPLETE);
+    fail_if(parseInteger(p) != 3999999999UL);
+    resetParser(p);
+} END_TEST
+
 Suite *parser_suite(void) {
     Suite *s = suite_create("Parser");
     TCase *tc_core = tcase_create("Core");
@@ -74,8 +180,10 @@ Suite *parser_suite(void) {
     tcase_add_test(tc_core, test_createParser);
     tcase_add_test(tc_core, test_parseChar);
     tcase_add_test(tc_core, test_resetParser);
-    tcase_add_test(tc_core, test_parseCharTooFewDigits);
+    tcase_add_test(tc_core, test_parseCharTooFewDigits1);
+    tcase_add_test(tc_core, test_parseCharTooFewDigits2);
     tcase_add_test(tc_core, test_parseCharTooManyDigits);
+    tcase_add_test(tc_core, test_parseInteger);
 
     return s;
 }

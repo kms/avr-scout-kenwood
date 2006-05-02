@@ -64,7 +64,7 @@ int main(void) {
     for (;;) {
 	if (p->state == COMPLETE) {
 	    u = parseInteger(p);
-	    sprintf(str, "FQ %li,3 (%li)\r\n", roundFreq(u), u);
+	//    sprintf(str, "FQ %li,3 (%li)\r\n", roundFreq(u), u);
 	    uartTx(str);
 	    resetParser(p);
 	}

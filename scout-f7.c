@@ -1,3 +1,8 @@
+/*
+ * Scout -> Kenwood
+ * Karl-Martin Skontorp LA9PMA <kms@skontorp.net>
+ * $Id$
+ */
 
 #define F_CPU 3686400UL
 
@@ -91,4 +96,5 @@ ISR(USART_RX_vect) {
 	fifoPut(c, UDR0);
     }
 }
+
 

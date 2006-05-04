@@ -1,3 +1,9 @@
+/*
+ * Scout -> Kenwood
+ * Karl-Martin Skontorp LA9PMA <kms@skontorp.net>
+ * $Id$
+ */
+
 #ifndef _FIFO_H
 #define _FIFO_H 1
 

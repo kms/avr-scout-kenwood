@@ -1,3 +1,9 @@
+/*
+ * Scout -> Kenwood
+ * Karl-Martin Skontorp LA9PMA <kms@skontorp.net>
+ * $Id$
+ */
+
 #include <check.h>
 #include "fRound.h"
 #include "testSuites.h"

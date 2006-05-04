@@ -1,3 +1,9 @@
+/*
+ * Scout -> Kenwood
+ * Karl-Martin Skontorp LA9PMA <kms@skontorp.net>
+ * $Id$
+ */
+
 #ifndef _FROUND_H
 #define _FROUND_H 1
 

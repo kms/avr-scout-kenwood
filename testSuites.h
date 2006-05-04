@@ -1,3 +1,9 @@
+/*
+ * Scout -> Kenwood
+ * Karl-Martin Skontorp LA9PMA <kms@skontorp.net>
+ * $Id$
+ */
+
 #ifndef _TESTSUITES_H
 #define _TESTSUITES_H 1
 

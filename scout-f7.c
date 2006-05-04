@@ -58,14 +58,24 @@ int main(void) {
 
     sei();
 
-    char str[32];
+    uartTx("# Scout -> Kenwood $Rev$\r\n"
+	    + "# Compiled: " + __TIMESTAMP_STRING__ + "\r\n"
+	    + "# gcc " + __VERSION__
+	    + " avr-libc " + __AVR_LIBC_VERSION_STRING__ + "\r\n");
+
+    char freq[16];
     uint32_t u;
 
     for (;;) {
 	if (p->state == COMPLETE) {
 	    u = parseInteger(p);
-	    sprintf(str, "FQ %li,3 (%li)\r\n", roundFreq(u), u);
-	    uartTx(str);
+	    uartTx("FQ ");
+	    ultoa(roundFreq(u), freq, 10);
+	    uartTx(freq);
+	    uartTx(",3 (");
+	    ultoa(u, freq, 10);
+	    uartTx(freq);
+	    uartTx(")\r\n");
 	    resetParser(p);
 	}
     }
@@ -78,5 +88,6 @@ ISR(USART_RX_vect) {
 	parseChar(p, UDR0);
     }
 }
+
 
 

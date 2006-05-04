@@ -6,6 +6,8 @@
 # Written by Pascal Stang
 # Based on Volker Oth's AVR makefiles of jan.2000
 # ----------------------------------------------------------------------------
+	
+	TIMESTAMP = `date  --rfc-3339=seconds | tr " " T`
 
 	MCU	= atmega88
 
@@ -30,7 +32,7 @@
 	ASFLAGS = -Wa, -gstabs
 
 #compiler flags
-	CPFLAGS	= -g -Os -Wall -Wstrict-prototypes -I$(AVRLIB) -Wa,-ahlms=$(<:.c=.lst) -fpack-struct -fshort-enums -mcall-prologues
+	CPFLAGS	= -g -Os -Wall -Wstrict-prototypes -I$(AVRLIB) -Wa,-ahlms=$(<:.c=.lst) -fpack-struct -fshort-enums -mcall-prologues -D__TIMESTAMP_STRING__=$(TIMESTAMP)
 
 #linker flags
 	LDFLAGS = -Wl,-Map=$(TRG).map,--cref
@@ -68,7 +70,7 @@ all:	$(TRG).elf $(TRG).hex $(TRG).eep $(TRG).ok
 
 ### BLOCK 5) compile: instructions to create assembler and/or object files from C source ###
 
-%.o : %.c 
+%.o : %.c
 	$(CC) -c $(CPFLAGS) -I$(INCDIR) $< -o $@
 
 %.s : %.c
@@ -124,7 +126,7 @@ size:
 	$(SIZE) $(TRG).elf
 
 up:
-	avrdude -p $(MCU) -c stk500v2 -U flash:w:$(TRG).hex  -v
+	avrdude -p $(MCU) -c stk500v2 -U flash:w:$(TRG).hex
 #	-U eeprom:w:$(TRG).eep -v
 #
 

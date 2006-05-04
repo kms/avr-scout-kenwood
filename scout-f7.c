@@ -16,24 +16,12 @@ fifo *c;
 parser *p;
 
 void uartTx(char *a) {
-    // TX contents of array
     while (*a) {
 	while (!(UCSR0A & _BV(UDRE0))) {
 	}
 
 	UDR0 = *a++;
     }
-
-    // Spin until all data is sent
-    while (!(UCSR0A & _BV(UDRE0))) {
-    }
-}
-
-void uartTxSingle(char a) {
-    while (!(UCSR0A & _BV(UDRE0))) {
-    }
-
-    UDR0 = a;
 
     // Spin until all data is sent
     while (!(UCSR0A & _BV(UDRE0))) {
@@ -76,13 +64,10 @@ int main(void) {
 
     char freq[16];
     uint32_t u;
-    char l;
 
     for (;;) {
 	if (!isFifoEmpty(c)) {
-	    l = fifoGet(c); 
-	    parseChar(p, l);
-	    uartTxSingle(l);
+	    parseChar(p, fifoGet(c));
 	}
 
 	if (p->state == COMPLETE) {

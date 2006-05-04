@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <ctype.h>
 #include "parser.h"
 #include "fifo.h"
 
@@ -69,16 +70,16 @@ void parseChar(parser *p, uint8_t c) {
 
 uint32_t parseInteger(parser *p) {
     uint32_t i = 0;
-
-    i += p->digit[0] * 1000000000;
-    i += p->digit[1] * 100000000;
-    i += p->digit[2] * 10000000;
-    i += p->digit[3] * 1000000;
-    i += p->digit[4] * 100000;
-    i += p->digit[5] * 10000;
-    i += p->digit[6] * 1000;
-    i += p->digit[7] * 100;
-    i += p->digit[8] * 10;
+    
+    i += p->digit[0] * 1000000000UL;
+    i += p->digit[1] * 100000000UL;
+    i += p->digit[2] * 10000000UL;
+    i += p->digit[3] * 1000000UL;
+    i += p->digit[4] * 100000UL;
+    i += p->digit[5] * 10000UL;
+    i += p->digit[6] * 1000UL;
+    i += p->digit[7] * 100UL;
+    i += p->digit[8] * 10UL;
     i += p->digit[9];
 
     return i;

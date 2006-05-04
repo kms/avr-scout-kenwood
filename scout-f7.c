@@ -29,6 +29,17 @@ void uartTx(char *a) {
     }
 }
 
+void uartTxSingle(char a) {
+    while (!(UCSR0A & _BV(UDRE0))) {
+    }
+
+    UDR0 = a;
+
+    // Spin until all data is sent
+    while (!(UCSR0A & _BV(UDRE0))) {
+    }
+}
+
 int main(void) {
     wdt_reset();
     wdt_disable();
@@ -65,10 +76,18 @@ int main(void) {
 
     char freq[16];
     uint32_t u;
+    char l;
 
     for (;;) {
+	if (!isFifoEmpty(c)) {
+	    l = fifoGet(c); 
+	    parseChar(p, l);
+	    uartTxSingle(l);
+	}
+
 	if (p->state == COMPLETE) {
 	    u = parseInteger(p);
+	    resetParser(p);
 	    uartTx("FQ ");
 	    ultoa(roundFreq(u), freq, 10);
 	    uartTx(freq);
@@ -76,7 +95,6 @@ int main(void) {
 	    ultoa(u, freq, 10);
 	    uartTx(freq);
 	    uartTx(")\r\n");
-	    resetParser(p);
 	}
     }
 
@@ -85,11 +103,6 @@ int main(void) {
 
 ISR(USART_RX_vect) {
     while (UCSR0A & _BV(RXC0)) {
-	parseChar(p, UDR0);
+	fifoPut(c, UDR0);
     }
 }
-
-
-
-
-

@@ -21,8 +21,6 @@ void parseChar(parser *p, uint8_t c) {
 	case R:
 	    if (c == 'R') {
 		p->state = F;
-	    } else {
-		resetParser(p);
 	    }
 	    break;
 	case F:
@@ -34,8 +32,8 @@ void parseChar(parser *p, uint8_t c) {
 	    }
 	    break;
 	case DIGITS:
-	    if ((c >= 48) && (c <= 57) && (p->digits < 10)) {
-		p->digit[p->digits] = c - 48;
+	    if (isdigit(c) && (p->digits < 10)) {
+		p->digit[p->digits] = c - '0';
 		p->digits++;
 		if (p->digits == 10) {
 		    p->state = CARRIAGE_RETURN;

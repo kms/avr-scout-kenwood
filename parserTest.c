@@ -170,6 +170,23 @@ START_TEST(test_parseInteger) {
     fail_if(p->state != COMPLETE);
     fail_if(parseInteger(p) != 3999999999UL);
     resetParser(p);
+
+    parseChar(p, 'R');
+    parseChar(p, 'F');
+    parseChar(p, '0');
+    parseChar(p, '6');
+    parseChar(p, '2');
+    parseChar(p, '1');
+    parseChar(p, '5');
+    parseChar(p, '8');
+    parseChar(p, '5');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '0');
+    parseChar(p, '\r');
+    parseChar(p, '\n');
+    fail_if(p->state != COMPLETE);
+    fail_if(parseInteger(p) != 621585000);
 } END_TEST
 
 Suite *parser_suite(void) {

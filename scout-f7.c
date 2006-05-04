@@ -21,7 +21,7 @@ void uartTx(char *a) {
 	while (!(UCSR0A & _BV(UDRE0))) {
 	}
 
-	UDR0 = *a;
+	UDR0 = *a++;
     }
 
     // Spin until all data is sent
@@ -59,9 +59,9 @@ int main(void) {
     sei();
 
     uartTx("# Scout -> Kenwood $Rev$ by LA9PMA <kms@skontorp.net>\r\n"
-	    + "# Compiled: " + __TIMESTAMP_STRING__ + "\r\n"
-	    + "# gcc " + __VERSION__
-	    + " avr-libc " + __AVR_LIBC_VERSION_STRING__ + "\r\n");
+	    "# Compiled: " __TIMESTAMP_STRING__ "\r\n"
+	    "# gcc " __VERSION__
+	    " avr-libc " __AVR_LIBC_VERSION_STRING__ "\r\n");
 
     char freq[16];
     uint32_t u;
@@ -88,6 +88,7 @@ ISR(USART_RX_vect) {
 	parseChar(p, UDR0);
     }
 }
+
 
 
 

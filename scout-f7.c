@@ -1,5 +1,5 @@
 
-#define F_CPU 14745600UL
+#define F_CPU 3686400UL
 
 #include <avr/io.h>
 #include <avr/sleep.h>
@@ -41,7 +41,7 @@ int main(void) {
 
     // UART0
     UCSR0B |= _BV(RXCIE0) | _BV(RXEN0) | _BV(TXEN0);
-    UBRR0L = 95;
+    UBRR0L = 23;
 
     // Empty RX FIFO
     while (UCSR0A & _BV(RXC0)) {
@@ -91,3 +91,4 @@ ISR(USART_RX_vect) {
 	fifoPut(c, UDR0);
     }
 }
+

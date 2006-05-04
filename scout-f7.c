@@ -46,7 +46,7 @@ int main(void) {
 
     // Empty RX FIFO
     while (UCSR0A & _BV(RXC0)) {
-	uint8_t c = UDR0;
+	UDR0;
     }
 
     c = fifoCreate(64);
@@ -64,7 +64,7 @@ int main(void) {
     for (;;) {
 	if (p->state == COMPLETE) {
 	    u = parseInteger(p);
-	//    sprintf(str, "FQ %li,3 (%li)\r\n", roundFreq(u), u);
+	    sprintf(str, "FQ %li,3 (%li)\r\n", roundFreq(u), u);
 	    uartTx(str);
 	    resetParser(p);
 	}
@@ -78,4 +78,5 @@ ISR(USART_RX_vect) {
 	parseChar(p, UDR0);
     }
 }
+
 

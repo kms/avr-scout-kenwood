@@ -76,22 +76,17 @@ void parseChar(parser *p, uint8_t c) {
 
 uint32_t parseInteger(parser *p) {
     uint32_t i = 0;
-    uint16_t j = 0;
-    uint8_t k = 0;
     
     i += p->digit[0] * 1000000000UL;
     i += p->digit[1] * 100000000UL;
     i += p->digit[2] * 10000000UL;
     i += p->digit[3] * 1000000UL;
     i += p->digit[4] * 100000UL;
-    i += p->digit[5] * 10000;
-    j += p->digit[6] * 1000;
-    j += p->digit[7] * 100;
-    k += p->digit[8] * 10;
-    k += p->digit[9];
-
-    j += k;
-    i += j;
+    i += p->digit[5] * 10000UL;
+    i += p->digit[6] * 1000;
+    i += p->digit[7] * 100;
+    i += p->digit[8] * 10;
+    i += p->digit[9];
 
     return i;
 }

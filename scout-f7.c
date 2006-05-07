@@ -81,10 +81,7 @@ int main(void) {
 	    uartTx("FQ ");
 	    ultoa(roundFreq(u), freq, 10);
 	    uartTx(freq);
-	    uartTx(",3 (");
-	    ultoa(u, freq, 10);
-	    uartTx(freq);
-	    uartTx(")\r\n");
+	    uartTx(",3\r\n");
 	}
     }
 

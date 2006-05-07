@@ -96,5 +96,3 @@ ISR(USART_RX_vect) {
 	fifoPut(c, UDR0);
     }
 }
-
-

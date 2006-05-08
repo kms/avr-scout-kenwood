@@ -77,6 +77,7 @@ int main(void) {
 	    resetParser(p);
 	    uartTx("FQ ");
 	    ultoa(roundFreq(u), freq, 10);
+	    /* Jallamekk for å få testa - skal byttes ut med padFreq() */
 	    uint8_t len = 11 - strlen(freq);
 	    uint8_t i;
 	    for (i = 0; i < len; i++) {

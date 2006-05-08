@@ -76,22 +76,16 @@ void parseChar(parser *p, uint8_t c) {
 }
 
 uint32_t parseInteger(parser *p) {
-    uint32_t i = 0;
-    
-    i += p->digit[0] * 1000000000UL;
-    i += p->digit[1] * 100000000UL;
-    i += p->digit[2] * 10000000UL;
-    i += p->digit[3] * 1000000UL;
-    i += p->digit[4] * 100000UL;
-    i += p->digit[5] * 10000UL;
-    i += p->digit[6] * 1000;
-    i += p->digit[7] * 100;
-    i += p->digit[8] * 10;
-    i += p->digit[9];
+    uint32_t i = p->digit[0];
+    uint8_t j;
+
+    for (j = 1; j < 10; j++) {
+	i = (i * 10) + p->digit[j];
+    }
 
     return i;
 }
 
 void padFreq(char *s) {
-    
+
 }

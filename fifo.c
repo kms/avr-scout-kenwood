@@ -7,10 +7,6 @@
 #include <stdlib.h>
 #include "fifo.h"
 
-uint8_t isFifoFull(fifo *c) {
-    return ((c->write + 1) % c->capacity) == c->read;
-}
-
 uint8_t isFifoEmpty(fifo *c) {
     return c->write == c->read;
 } 

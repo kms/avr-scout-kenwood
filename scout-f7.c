@@ -63,11 +63,6 @@ int main(void) {
 
     sei();
 
-    uartTx("# Scout -> Kenwood $Rev$ by LA9PMA <kms@skontorp.net>\r\n"
-	    "# Compiled: " __TIMESTAMP_STRING__ "\r\n"
-	    "# gcc " __VERSION__
-	    " avr-libc " __AVR_LIBC_VERSION_STRING__ "\r\n");
-
     char freq[16];
     uint32_t u;
     uint16_t z;

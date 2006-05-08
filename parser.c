@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 #include "parser.h"
 #include "fifo.h"
 
@@ -89,4 +90,8 @@ uint32_t parseInteger(parser *p) {
     i += p->digit[9];
 
     return i;
+}
+
+void padFreq(char *s) {
+    
 }

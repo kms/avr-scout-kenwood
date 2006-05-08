@@ -195,6 +195,15 @@ START_TEST(test_parseInteger) {
     fail_if(parseInteger(p) != 621585000);
 } END_TEST
 
+START_TEST(test_padFreq) {
+    char s[16] = "123";
+
+    padFreq(&s);
+
+    //fail_if(strlen(&s) != 11);
+    fail_if(strcmp(&s, "00000000123") != 0);
+} END_TEST
+
 Suite *parser_suite(void) {
     Suite *s = suite_create("Parser");
     TCase *tc_core = tcase_create("Core");
@@ -207,6 +216,7 @@ Suite *parser_suite(void) {
     tcase_add_test(tc_core, test_parseCharTooFewDigits2);
     tcase_add_test(tc_core, test_parseCharTooManyDigits);
     tcase_add_test(tc_core, test_parseInteger);
+    tcase_add_test(tc_core, test_padFreq);
 
     return s;
 }

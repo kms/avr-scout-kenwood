@@ -13,6 +13,7 @@
 #include <util/delay.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "fifo.h"
 #include "fRound.h"
 #include "parser.h"
@@ -69,6 +70,7 @@ int main(void) {
 
     char freq[16];
     uint32_t u;
+    uint16_t z;
 
     for (;;) {
 	if (!isFifoEmpty(c)) {
@@ -80,8 +82,21 @@ int main(void) {
 	    resetParser(p);
 	    uartTx("FQ ");
 	    ultoa(roundFreq(u), freq, 10);
+	    uint8_t len = 11 - strlen(freq);
+	    uint8_t i;
+	    for (i = 0; i < len; i++) {
+		uartTx("0");
+	    }
+	    padFreq(freq);
 	    uartTx(freq);
-	    uartTx(",3\r\n");
+	    uartTx(",8\r\n");
+	    uartTx("LMP 1\r\n");
+	}
+	_delay_ms(1);
+	z++;
+	if (z == 1024) {
+	    uartTx("LMP 0\r\n");
+	    z = 0;
 	}
     }
 

@@ -23,14 +23,14 @@ parser *p;
 
 void uartTx(char *a) {
     while (*a) {
-	while (!(UCSRA & _BV(UDRE))) {
+	while (!(UCSR0A & _BV(UDRE0))) {
 	}
 
-	UDR = *a++;
+	UDR0 = *a++;
     }
 
     // Spin until all data is sent
-    while (!(UCSRA & _BV(UDRE))) {
+    while (!(UCSR0A & _BV(UDRE0))) {
     }
 }
 
@@ -38,34 +38,37 @@ int main(void) {
     wdt_reset();
     wdt_disable();
 
+    CLKPR = _BV(CLKPCE);
+    CLKPR = _BV(CLKPS0);
+
     // Enable pull-ups
-    PORTA = 0xff;
     PORTB = 0xff;
+    PORTC = 0xff;
     PORTD = 0xff;
 
     DDRD = _BV(DDD1);
 
     // UART0
-    UCSRB |= _BV(RXCIE) | _BV(RXEN) | _BV(TXEN);
-    UBRRL = 23;
+    UCSR0B |= _BV(RXCIE0) | _BV(RXEN0) | _BV(TXEN0);
+    UBRR0L = 25;
 
     // Empty RX FIFO
-    while (UCSRA & _BV(RXC)) {
-	UDR;
+    while (UCSR0A & _BV(RXC0)) {
+	UDR0;
     }
+    
+    uartTx("# Scout->Kenwood $Rev$ <kms@skontorp.net>\r\n"
+	    "# Compiled: " __TIMESTAMP_STRING__ "\r\n");
 
-    c = fifoCreate(64);
+    c = fifoCreate(32);
     p = createParser();
-
-    // Go!
-    wdt_reset();
-    //wdt_enable(WDTO_500MS);
-
-    sei();
 
     char freq[16];
     uint32_t u;
     uint16_t z = 0;
+
+    // Go!
+    sei();
 
     for (;;) {
 	if (!isFifoEmpty(c)) {
@@ -76,14 +79,15 @@ int main(void) {
 	    u = parseInteger(p);
 	    resetParser(p);
 	    uartTx("FQ ");
-		intToPaddedString(roundFreq(u), freq);
+	    intToPaddedString(roundFreq(u), freq);
 	    uartTx(freq);
-	    uartTx(",8\r\n");
+	    uartTx(",5\r\n");
 	    uartTx("LMP 1\r\n");
+	    z = 0;
 	}
 	_delay_ms(1);
 	z++;
-	if (z == 1024) {
+	if (z == 4192) {
 	    uartTx("LMP 0\r\n");
 	    z = 0;
 	}
@@ -93,7 +97,7 @@ int main(void) {
 }
 
 ISR(USART_RX_vect) {
-    while (UCSRA & _BV(RXC)) {
-	fifoPut(c, UDR);
+    while (UCSR0A & _BV(RXC0)) {
+	fifoPut(c, UDR0);
     }
 }

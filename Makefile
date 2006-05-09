@@ -9,7 +9,7 @@
 	
 	TIMESTAMP = \"`date  --iso-8601=seconds | tr " " T`\"
 
-	MCU	= attiny2313
+	MCU	= atmega48
 
 	TRG     = scout-f7
 
@@ -126,7 +126,7 @@ size:
 	$(SIZE) $(TRG).elf
 
 up:
-	avrdude -p $(MCU) -c stk500v2 -U flash:w:$(TRG).hex
+	avrdude -p $(MCU) -c stk500v2 -U flash:w:$(TRG).hex -v
 #	-U eeprom:w:$(TRG).eep -v
 #
 

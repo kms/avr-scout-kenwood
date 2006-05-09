@@ -80,7 +80,7 @@ uint32_t parseInteger(parser *p) {
     uint8_t j;
 
     for (j = 1; j < 10; j++) {
-	i = (i * 10) + p->digit[j];
+	i = (i<<3) + (i<<1) + p->digit[j];
     }
 
     return i;

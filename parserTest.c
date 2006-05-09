@@ -5,6 +5,7 @@
  */
 
 #include <check.h>
+#include <string.h>
 #include "parser.h"
 #include "testSuites.h"
 
@@ -195,13 +196,20 @@ START_TEST(test_parseInteger) {
     fail_if(parseInteger(p) != 621585000);
 } END_TEST
 
-START_TEST(test_padFreq) {
-    //char s[16] = "123";
+START_TEST(test_intToPaddedString) {
+	char s[16];
 
-    //padFreq(&s);
+	intToPaddedString(8, s);
+	fail_if(strlen(s) != 11);
+	fail_if(strcmp(s, "00000000008") != 0);
 
-    //fail_if(strlen(&s) != 11);
-    //fail_if(strcmp(&s, "00000000123") != 0);
+	intToPaddedString(1234567890, s);
+	fail_if(strlen(s) != 11);
+	fail_if(strcmp(s, "01234567890") != 0);
+
+	intToPaddedString(54321, s);
+	fail_if(strlen(s) != 11);
+	fail_if(strcmp(s, "00000054321") != 0);
 } END_TEST
 
 Suite *parser_suite(void) {
@@ -216,7 +224,7 @@ Suite *parser_suite(void) {
     tcase_add_test(tc_core, test_parseCharTooFewDigits2);
     tcase_add_test(tc_core, test_parseCharTooManyDigits);
     tcase_add_test(tc_core, test_parseInteger);
-    tcase_add_test(tc_core, test_padFreq);
+    tcase_add_test(tc_core, test_intToPaddedString);
 
     return s;
 }

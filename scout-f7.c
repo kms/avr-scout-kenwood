@@ -65,7 +65,7 @@ int main(void) {
 
     char freq[16];
     uint32_t u;
-    uint16_t z;
+    uint16_t z = 0;
 
     for (;;) {
 	if (!isFifoEmpty(c)) {
@@ -76,14 +76,7 @@ int main(void) {
 	    u = parseInteger(p);
 	    resetParser(p);
 	    uartTx("FQ ");
-	    ultoa(roundFreq(u), freq, 10);
-	    /* Jallamekk for å få testa - skal byttes ut med padFreq() */
-	    uint8_t len = 11 - strlen(freq);
-	    uint8_t i;
-	    for (i = 0; i < len; i++) {
-		uartTx("0");
-	    }
-	    padFreq(freq);
+		intToPaddedString(roundFreq(u), freq);
 	    uartTx(freq);
 	    uartTx(",8\r\n");
 	    uartTx("LMP 1\r\n");

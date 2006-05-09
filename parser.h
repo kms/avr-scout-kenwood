@@ -22,6 +22,6 @@ parser* createParser(void);
 void resetParser(parser *p);
 void parseChar(parser *p, uint8_t c);
 uint32_t parseInteger(parser *p);
-void padFreq(char *s);
+void intToPaddedString(uint32_t u, char *s);
 
 #endif

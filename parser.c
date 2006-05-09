@@ -5,10 +5,10 @@
  */
 
 #include <stdlib.h>
-#include <ctype.h>
 #include <string.h>
 #include "parser.h"
-#include "fifo.h"
+
+#define PADSIZE 11
 
 parser* createParser(void) {
     parser *p = malloc(sizeof(parser));
@@ -40,7 +40,7 @@ void parseChar(parser *p, uint8_t c) {
 	    }
 	    break;
 	case DIGITS:
-	    if (isdigit(c) && (p->digits < 10)) {
+	    if (c >= '0' && c <= '9' && (p->digits < 10)) {
 		p->digit[p->digits] = c - '0';
 		p->digits++;
 		if (p->digits == 10) {
@@ -86,6 +86,19 @@ uint32_t parseInteger(parser *p) {
     return i;
 }
 
-void padFreq(char *s) {
-
+void intToPaddedString(uint32_t u, char *s) {
+	char *tmp = s;
+	while (u > 0) {
+		*tmp++ = (u % 10) + '0';
+		u /= 10;
+	}
+	while (tmp - s < PADSIZE) {
+		*tmp++ = '0';
+	}
+	*tmp-- = '\0';
+	while (tmp >= s) {
+		uint8_t c = *s;
+		*s++ = *tmp;
+		*tmp-- = c;
+	}
 }

@@ -10,10 +10,11 @@
 #include <stdint.h>
 
 typedef struct {
-    uint8_t *buffer;
-    uint8_t capacity;
     volatile uint8_t read;
     volatile uint8_t write;
+	volatile uint8_t unconsumed;
+    uint8_t capacity;
+    uint8_t buffer[0];
 } fifo;
 
 uint8_t isFifoFull(fifo *c);

@@ -13,30 +13,20 @@ freq_bands bands[NUMBER_OF_BANDS] = {
     {0, 12500},
 };
 
-uint8_t findBand(uint32_t freq) {
-    uint8_t i;
-
-    for (i = 1; i < NUMBER_OF_BANDS; i++) {
-	if ((bands[i - 1].lower <= freq)
-		&& (bands[i].lower > freq)) {
+uint32_t roundFreq(uint32_t freq) {
+    uint8_t band;
+    uint16_t r;
+    for (band = 1; band < NUMBER_OF_BANDS; band++) {
+	if ((bands[band - 1].lower <= freq)
+		&& (bands[band].lower > freq)) {
 	    break;
 	}
     }
+	band--;
+	r = freq % bands[band].step;
 
-    return i - 1;
-}
-
-uint32_t roundFreq(uint32_t freq) {
-    uint8_t band = findBand(freq);
-    uint16_t r = freq % bands[band].step;
-
-    if (r == 0) {
-	return freq;
+    if (r >= (bands[band].step / 2)) {
+	freq += bands[band].step;
     }
-
-    if (r < (bands[band].step / 2)) {
 	return freq - r;
-    } else {
-	return freq + (bands[band].step - r);
-    }
 }

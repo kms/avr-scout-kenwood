@@ -7,7 +7,7 @@
 # Based on Volker Oth's AVR makefiles of jan.2000
 # ----------------------------------------------------------------------------
 	
-	TIMESTAMP = \"`date  --rfc-3339=seconds | tr " " T`\"
+	TIMESTAMP = \"`date  --iso-8601=seconds | tr " " T`\"
 
 	MCU	= atmega88
 

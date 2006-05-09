@@ -23,14 +23,14 @@ parser *p;
 
 void uartTx(char *a) {
     while (*a) {
-	while (!(UCSR0A & _BV(UDRE0))) {
+	while (!(UCSRA & _BV(UDRE))) {
 	}
 
-	UDR0 = *a++;
+	UDR = *a++;
     }
 
     // Spin until all data is sent
-    while (!(UCSR0A & _BV(UDRE0))) {
+    while (!(UCSRA & _BV(UDRE))) {
     }
 }
 
@@ -39,19 +39,19 @@ int main(void) {
     wdt_disable();
 
     // Enable pull-ups
+    PORTA = 0xff;
     PORTB = 0xff;
-    PORTC = 0xff;
     PORTD = 0xff;
 
     DDRD = _BV(DDD1);
 
     // UART0
-    UCSR0B |= _BV(RXCIE0) | _BV(RXEN0) | _BV(TXEN0);
-    UBRR0L = 23;
+    UCSRB |= _BV(RXCIE) | _BV(RXEN) | _BV(TXEN);
+    UBRRL = 23;
 
     // Empty RX FIFO
-    while (UCSR0A & _BV(RXC0)) {
-	UDR0;
+    while (UCSRA & _BV(RXC)) {
+	UDR;
     }
 
     c = fifoCreate(64);
@@ -93,7 +93,7 @@ int main(void) {
 }
 
 ISR(USART_RX_vect) {
-    while (UCSR0A & _BV(RXC0)) {
-	fifoPut(c, UDR0);
+    while (UCSRA & _BV(RXC)) {
+	fifoPut(c, UDR);
     }
 }

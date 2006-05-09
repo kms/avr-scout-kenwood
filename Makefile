@@ -9,7 +9,7 @@
 	
 	TIMESTAMP = \"`date  --iso-8601=seconds | tr " " T`\"
 
-	MCU	= atmega88
+	MCU	= attiny2313
 
 	TRG     = scout-f7
 

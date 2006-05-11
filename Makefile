@@ -45,7 +45,7 @@
 	RN	= mv
 	CP	= cp
 	BIN	= avr-objcopy
-	SIZE	= avr-size
+	SIZE	= ./avr-mem.sh
 	INCDIR	= .
 	AVRLIB	= avrlib
 
@@ -99,8 +99,7 @@ all:	$(TRG).elf $(TRG).hex $(TRG).eep $(TRG).ok
 
 ###### BLOCK 10) If all other steps compile ok then echo "Errors: none" ######
 
-%ok:
-	$(SIZE) $(TRG).elf
+%ok: size
 	@echo "Errors: none" 
 
 ###### BLOCK 11)  make instruction to delete created files ######
@@ -123,7 +122,7 @@ clean:
 	@echo "Errors: none"
 	
 size:
-	$(SIZE) $(TRG).elf
+	$(SIZE) $(TRG).elf $(MCU)
 
 up:
 	avrdude -p $(MCU) -c stk500v2 -U flash:w:$(TRG).hex -v

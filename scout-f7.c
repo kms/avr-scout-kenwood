@@ -26,8 +26,6 @@ void uartTx(char *a) {
 	loop_until_bit_is_clear(UCSR0A, UDRE0);
 	UDR0 = *a++;
     }
-
-    loop_until_bit_is_clear(UCSR0A, UDRE0);
 }
 
 int main(void) {
@@ -56,7 +54,7 @@ int main(void) {
     uartTx("# Scout->Kenwood $Rev$ <kms@skontorp.net>\r\n"
 	    "# Compiled: " __TIMESTAMP_STRING__ "\r\n");
 
-    c = fifoCreate(32);
+    c = fifoCreate(20);
     p = createParser();
 
     char freq[16];
@@ -81,12 +79,13 @@ int main(void) {
 	    uartTx("LMP 1\r\n");
 	    z = 0;
 	}
-	_delay_ms(1);
-	z++;
-	if (z == 4192) {
+	
+	if (z++ == 4192) {
 	    uartTx("LMP 0\r\n");
 	    z = 0;
 	}
+	
+	_delay_ms(1);
     }
 
     return 0;

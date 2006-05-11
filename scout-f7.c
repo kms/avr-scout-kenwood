@@ -23,15 +23,11 @@ parser *p;
 
 void uartTx(char *a) {
     while (*a) {
-	while (!(UCSR0A & _BV(UDRE0))) {
-	}
-
+	loop_until_bit_is_clear(UCSR0A, UDRE0);
 	UDR0 = *a++;
     }
 
-    // Spin until all data is sent
-    while (!(UCSR0A & _BV(UDRE0))) {
-    }
+    loop_until_bit_is_clear(UCSR0A, UDRE0);
 }
 
 int main(void) {
@@ -53,7 +49,7 @@ int main(void) {
     UBRR0L = 25;
 
     // Empty RX FIFO
-    while (UCSR0A & _BV(RXC0)) {
+    while (bit_is_set(UCSR0A, RXC0)) {
 	UDR0;
     }
     

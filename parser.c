@@ -23,7 +23,7 @@ void resetParser(parser *p) {
     p->digits = 0;
 }
 
-void parseChar(parser *p, uint8_t c) {
+void parseChar(parser *p, const uint8_t c) {
     switch (p->state) {
 	case DIGITS:
 	    if (c >= '0' && c <= '9' && (p->digits < 10)) {
@@ -41,7 +41,7 @@ void parseChar(parser *p, uint8_t c) {
     }
 }
 
-uint32_t parseInteger(parser *p) {
+uint32_t parseInteger(const parser *p) {
     uint32_t i = p->digit[0];
     uint8_t j;
 

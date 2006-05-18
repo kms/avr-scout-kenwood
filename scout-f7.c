@@ -10,6 +10,7 @@
 #include <avr/sleep.h>
 #include <avr/interrupt.h>
 #include <avr/wdt.h>
+#include <avr/pgmspace.h>
 #include <util/delay.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -21,10 +22,17 @@
 fifo *c;
 parser *p;
 
-void uartTx(char *a) {
+void uartTx(const char *a) {
     while (*a) {
 	loop_until_bit_is_set(UCSRA, UDRE);
 	UDR = *a++;
+    }
+}
+
+void uartTx_P(const char *a) {
+    while (pgm_read_byte_near(a)) {
+	loop_until_bit_is_set(UCSRA, UDRE);
+	UDR = pgm_read_byte_near(a++);
     }
 }
 
@@ -42,6 +50,9 @@ int main(void) {
 
     DDRD = _BV(DDD1);
 
+    DIDR = _BV(AIN1D) | _BV(AIN0D);
+    ACSR = _BV(ACD);
+    
     // USART
     UCSRB = _BV(TXEN) | _BV(RXCIE) | _BV(RXEN);
     UBRRL = 25;
@@ -55,27 +66,22 @@ int main(void) {
     // Go!
     sei();
 
-    // Empty RX FIFO
-    while (bit_is_set(UCSRA, RXC)) {
-	UDR;
-    }
-
     for (;;) {
 	if (!isFifoEmpty(c)) {
 	    parseChar(p, fifoGet(c));
 	}
 
 	if (p->state == COMPLETE) {
-	    uartTx("FQ ");
+	    uartTx_P(PSTR("FQ "));
 	    intToPaddedString(roundFreq(parseInteger(p)), freq);
 	    uartTx(freq);
-	    uartTx(",5\r\nLMP 1\r\n");
+	    uartTx_P(PSTR(",5\r\nLMP 1\r\n"));
 	    z = 0;
 	    resetParser(p);
 	}
 
 	if (z++ == 4096) {
-	    uartTx("LMP 0\r\n");
+	    uartTx_P(PSTR("LMP 0\r\n"));
 	}
 
 	_delay_ms(1);

@@ -17,10 +17,9 @@ typedef struct {
     uint8_t buffer[0];
 } fifo;
 
-uint8_t isFifoFull(fifo *c);
-uint8_t isFifoEmpty(fifo *c);
+uint8_t isFifoEmpty(const fifo *c);
 uint8_t fifoSize(fifo *c);
 uint8_t fifoGet(fifo *c);
-void fifoPut(fifo *c, uint8_t p);
-fifo* fifoCreate(uint8_t capacity);
+void fifoPut(fifo *c, const uint8_t p);
+fifo* fifoCreate(const uint8_t capacity);
 #endif

@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include "fifo.h"
 
-uint8_t isFifoEmpty(fifo *c) {
+uint8_t isFifoEmpty(const fifo *c) {
     return c->unconsumed == 0;
 } 
 
@@ -17,13 +17,13 @@ uint8_t fifoGet(fifo *c) {
     return c->buffer[c->read++];
 }       
 
-void fifoPut(fifo *c, uint8_t p) {
+void fifoPut(fifo *c, const uint8_t p) {
     c->write = c->write % c->capacity;
     c->buffer[c->write++] = p;
     c->unconsumed++;
 }
 
-fifo* fifoCreate(uint8_t capacity) {
+fifo* fifoCreate(const uint8_t capacity) {
     fifo *f = malloc(sizeof(fifo) + (capacity * sizeof(uint8_t)));
 
     f->read = 0;

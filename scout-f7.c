@@ -23,8 +23,8 @@ parser *p;
 
 void uartTx(char *a) {
     while (*a) {
-	loop_until_bit_is_clear(UCSR0A, UDRE0);
-	UDR0 = *a++;
+	loop_until_bit_is_clear(UCSRA, UDRE);
+	UDR = *a++;
     }
 }
 
@@ -36,19 +36,19 @@ int main(void) {
     CLKPR = _BV(CLKPS0);
 
     // Enable pull-ups
+    PORTA = 0xff;
     PORTB = 0xff;
-    PORTC = 0xff;
     PORTD = 0xff;
 
     DDRD = _BV(DDD1);
 
     // UART0
-    UCSR0B |= _BV(RXCIE0) | _BV(RXEN0) | _BV(TXEN0);
-    UBRR0L = 25;
+    UCSRB |= _BV(RXCIE) | _BV(RXEN) | _BV(TXEN);
+    UBRRL = 25;
 
     // Empty RX FIFO
-    while (bit_is_set(UCSR0A, RXC0)) {
-	UDR0;
+    while (bit_is_set(UCSRA, RXC)) {
+	UDR;
     }
     
     uartTx("# Scout->Kenwood $Rev$ <kms@skontorp.net>\r\n"
@@ -92,7 +92,7 @@ int main(void) {
 }
 
 ISR(USART_RX_vect) {
-    while (UCSR0A & _BV(RXC0)) {
-	fifoPut(c, UDR0);
+    while (UCSRA & _BV(RXC)) {
+	fifoPut(c, UDR);
     }
 }

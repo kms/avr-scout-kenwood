@@ -9,7 +9,7 @@
 	
 	TIMESTAMP = \"`date  --iso-8601=seconds | tr " " T`\"
 
-	MCU	= atmega48
+	MCU	= attiny2313
 
 	TRG     = scout-f7
 
@@ -32,7 +32,7 @@
 	ASFLAGS = -Wa, -gstabs
 
 #compiler flags
-	CPFLAGS	= -g -Os -Wall -Wstrict-prototypes -I$(AVRLIB) -Wa,-ahlms=$(<:.c=.lst) -fpack-struct -fshort-enums -mcall-prologues -D__TIMESTAMP_STRING__=$(TIMESTAMP)
+	CPFLAGS	= -g -Os -Wall -Wstrict-prototypes -I$(AVRLIB) -Wa,-ahlms=$(<:.c=.lst) -fpack-struct -fshort-enums -mcall-prologues -D__TIMESTAMP_STRING__=$(TIMESTAMP) -Winline
 
 #linker flags
 	LDFLAGS = -Wl,-Map=$(TRG).map,--cref

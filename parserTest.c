@@ -11,7 +11,7 @@
 
 START_TEST(test_createParser) {
     parser *p = createParser();
-    fail_if(p->state != R);
+    fail_if(p->state != DIGITS);
     fail_if(p->digits != 0);
 } END_TEST
 
@@ -21,7 +21,7 @@ START_TEST(test_parseChar) {
     parser *p = createParser();
 
     parseChar(p, 'R');
-    fail_if(p->state != F);
+    fail_if(p->state != DIGITS);
     fail_if(p->digits != 0);
     
     parseChar(p, 'F');
@@ -35,11 +35,11 @@ START_TEST(test_parseChar) {
     }
 
     parseChar(p, '0');
-    fail_if(p->state != CARRIAGE_RETURN);
+    fail_if(p->state != COMPLETE);
     fail_if(p->digits != 10);
 
     parseChar(p, '\r');
-    fail_if(p->state != NEWLINE);
+    fail_if(p->state != COMPLETE);
     fail_if(p->digits != 10);
 
     parseChar(p, '\n');
@@ -63,7 +63,7 @@ START_TEST(test_parseCharTooFewDigits1) {
     parseChar(p, 'R');
     parseChar(p, 'F');
     parseChar(p, 'R');
-    fail_if(p->state != F);
+    fail_if(p->state != DIGITS);
 } END_TEST
 
 START_TEST(test_parseCharTooFewDigits2) {
@@ -73,7 +73,7 @@ START_TEST(test_parseCharTooFewDigits2) {
     parseChar(p, '1');
     parseChar(p, '2');
     parseChar(p, 'R');
-    fail_if(p->state != F);
+    fail_if(p->state != DIGITS);
 } END_TEST
 
 START_TEST(test_parseCharTooManyDigits) {
@@ -91,7 +91,8 @@ START_TEST(test_parseCharTooManyDigits) {
     parseChar(p, '9');
     parseChar(p, '0');
     parseChar(p, '1');
-    fail_if(p->state != R);
+    fail_if(p->state != COMPLETE);
+    fail_if(p->digits != 10);
 } END_TEST
 
 START_TEST(test_resetParser) {
@@ -99,7 +100,7 @@ START_TEST(test_resetParser) {
     parseChar(p, 'R');
     parseChar(p, 'F');
     resetParser(p);
-    fail_if(p->state != R);
+    fail_if(p->state != DIGITS);
     fail_if(p->digits != 0);
 } END_TEST
 

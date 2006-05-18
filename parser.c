@@ -13,64 +13,30 @@
 parser* createParser(void) {
     parser *p = malloc(sizeof(parser));
 
-    p->state = R;
-    p->digits = 0;
+    resetParser(p);
 
     return p;
 }
 
 void resetParser(parser *p) {
-    p->state = R;
+    p->state = DIGITS;
     p->digits = 0;
 }
 
 void parseChar(parser *p, uint8_t c) {
     switch (p->state) {
-	case R:
-	    if (c == 'R') {
-		p->state = F;
-	    }
-	    break;
-	case F:
-	    if (c == 'F') {
-		p->state = DIGITS;
-	    } else {
-		resetParser(p);
-		parseChar(p, c);
-	    }
-	    break;
 	case DIGITS:
 	    if (c >= '0' && c <= '9' && (p->digits < 10)) {
 		p->digit[p->digits] = c - '0';
 		p->digits++;
 		if (p->digits == 10) {
-		    p->state = CARRIAGE_RETURN;
+		    p->state = COMPLETE;
 		}
 	    } else {
 		resetParser(p);
-		parseChar(p, c);
-	    }
-	    break;
-	case CARRIAGE_RETURN:
-	    if (c == '\r') {
-		p->state = NEWLINE;
-	    } else {
-		resetParser(p);
-		parseChar(p, c);
-	    }
-	    break;
-	case NEWLINE:
-	    if (c == '\n') {
-		p->state = COMPLETE;
-	    } else {
-		resetParser(p);
-		parseChar(p, c);
 	    }
 	    break;
 	case COMPLETE:
-	    break;
-	default:
-	    resetParser(p);
 	    break;
     }
 }

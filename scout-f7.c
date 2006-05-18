@@ -23,7 +23,7 @@ parser *p;
 
 void uartTx(char *a) {
     while (*a) {
-	loop_until_bit_is_clear(UCSRA, UDRE);
+	loop_until_bit_is_set(UCSRA, UDRE);
 	UDR = *a++;
     }
 }
@@ -32,8 +32,8 @@ int main(void) {
     wdt_reset();
     wdt_disable();
 
-    CLKPR = _BV(CLKPCE);
-    CLKPR = _BV(CLKPS0);
+    //    CLKPR = _BV(CLKPCE);
+    //    CLKPR = _BV(CLKPS0);
 
     // Enable pull-ups
     PORTA = 0xff;
@@ -42,26 +42,23 @@ int main(void) {
 
     DDRD = _BV(DDD1);
 
-    // UART0
-    UCSRB |= _BV(RXCIE) | _BV(RXEN) | _BV(TXEN);
+    // USART
+    UCSRB = _BV(TXEN) | _BV(RXCIE) | _BV(RXEN);
     UBRRL = 25;
+
+    c = fifoCreate(40);
+    p = createParser();
+
+    char freq[12];
+    uint16_t z = 0;
+
+    // Go!
+    sei();
 
     // Empty RX FIFO
     while (bit_is_set(UCSRA, RXC)) {
 	UDR;
     }
-    
-    uartTx("# Scout->Kenwood $Rev$ <kms@skontorp.net>\r\n"
-	    "# Compiled: " __TIMESTAMP_STRING__ "\r\n");
-
-    c = fifoCreate(20);
-    p = createParser();
-
-    char freq[11];
-    uint16_t z = 0;
-
-    // Go!
-    sei();
 
     for (;;) {
 	if (!isFifoEmpty(c)) {
@@ -76,11 +73,11 @@ int main(void) {
 	    z = 0;
 	    resetParser(p);
 	}
-	
+
 	if (z++ == 4096) {
 	    uartTx("LMP 0\r\n");
 	}
-	
+
 	_delay_ms(1);
     }
 

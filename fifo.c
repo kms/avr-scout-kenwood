@@ -8,19 +8,19 @@
 #include "fifo.h"
 
 uint8_t isFifoEmpty(fifo *c) {
-	return c->unconsumed == 0;
+    return c->unconsumed == 0;
 } 
 
 uint8_t fifoGet(fifo *c) {
-	c->read = c->read % c->capacity;
-	c->unconsumed--;
+    c->read = c->read % c->capacity;
+    c->unconsumed--;
     return c->buffer[c->read++];
 }       
 
 void fifoPut(fifo *c, uint8_t p) {
-	c->write = c->write % c->capacity;
+    c->write = c->write % c->capacity;
     c->buffer[c->write++] = p;
-	c->unconsumed++;
+    c->unconsumed++;
 }
 
 fifo* fifoCreate(uint8_t capacity) {
@@ -28,7 +28,7 @@ fifo* fifoCreate(uint8_t capacity) {
 
     f->read = 0;
     f->write = 0;
-	f->unconsumed = 0;
+    f->unconsumed = 0;
     f->capacity = capacity;
 
     return f;

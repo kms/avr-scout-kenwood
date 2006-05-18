@@ -57,8 +57,7 @@ int main(void) {
     c = fifoCreate(20);
     p = createParser();
 
-    char freq[16];
-    uint32_t u;
+    char freq[11];
     uint16_t z = 0;
 
     // Go!
@@ -70,19 +69,16 @@ int main(void) {
 	}
 
 	if (p->state == COMPLETE) {
-	    u = parseInteger(p);
-	    resetParser(p);
 	    uartTx("FQ ");
-	    intToPaddedString(roundFreq(u), freq);
+	    intToPaddedString(roundFreq(parseInteger(p)), freq);
 	    uartTx(freq);
-	    uartTx(",5\r\n");
-	    uartTx("LMP 1\r\n");
+	    uartTx(",5\r\nLMP 1\r\n");
 	    z = 0;
+	    resetParser(p);
 	}
 	
-	if (z++ == 4192) {
+	if (z++ == 4096) {
 	    uartTx("LMP 0\r\n");
-	    z = 0;
 	}
 	
 	_delay_ms(1);

@@ -12,7 +12,7 @@
 typedef struct {
     volatile uint8_t read;
     volatile uint8_t write;
-	volatile uint8_t unconsumed;
+    volatile uint8_t unconsumed;
     uint8_t capacity;
     uint8_t buffer[0];
 } fifo;

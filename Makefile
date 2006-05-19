@@ -11,7 +11,7 @@
 
 	MCU	= attiny2313
 
-	TRG     = scout-f7
+	TRG     = scout-kenwood
 
 	TESTS	= fifoTest.c fRoundTest.c parserTest.c
 	TESTABLES = fifo.c fRound.c parser.c
@@ -32,10 +32,10 @@
 	ASFLAGS = -Wa, -gstabs
 
 #compiler flags
-	CPFLAGS	= -g -Os -Wall -Wstrict-prototypes -I$(AVRLIB) -Wa,-ahlms=$(<:.c=.lst) -fpack-struct -fshort-enums -mcall-prologues -D__TIMESTAMP_STRING__=$(TIMESTAMP) -Winline
+	CPFLAGS	= -g -Os -Wall -Wstrict-prototypes -I$(AVRLIB) -Wa,-ahlms=$(<:.c=.lst) -fpack-struct -fshort-enums -mcall-prologues -D__TIMESTAMP_STRING__=$(TIMESTAMP) -Winline -fwhole-program -combine 
 
 #linker flags
-	LDFLAGS = -Wl,-Map=$(TRG).map,--cref
+	LDFLAGS = -Wl,-Map=$(TRG).map,--cref -fwhole-program -combine
 
 ### BLOCK 1) define some variables based on the AVR base path in $(AVR) ###
 
@@ -71,7 +71,7 @@ all:	$(TRG).elf $(TRG).hex $(TRG).eep $(TRG).ok
 ### BLOCK 5) compile: instructions to create assembler and/or object files from C source ###
 
 %.o : %.c
-	$(CC) -c $(CPFLAGS) -I$(INCDIR) $< -o $@
+	$(CC) -c $(CPFLAGS) -I$(INCDIR) $(SRC) -o $@
 
 %.s : %.c
 	$(CC) -S $(CPFLAGS) -I$(INCDIR) $< -o $@
@@ -84,8 +84,8 @@ all:	$(TRG).elf $(TRG).hex $(TRG).eep $(TRG).ok
 
 
 ### BLOCK 7)  link: instructions to create elf output file from object files ###
-%.elf: $(OBJ)
-	$(CC) $(OBJ) $(LIB) $(LDFLAGS) -o $@
+%.elf: $(TRG).o
+	$(CC) $(TRG).o $(LIB) $(LDFLAGS) -o $@
 
 ### BLOCK 8) create avrobj file from elf output file ###
 

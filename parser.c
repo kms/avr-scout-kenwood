@@ -54,14 +54,18 @@ uint32_t parseInteger(const parser *p) {
 
 void intToPaddedString(uint32_t u, char *s) {
     char *tmp = s;
+    
     while (u > 0) {
 	*tmp++ = (u % 10) + '0';
 	u /= 10;
     }
+    
     while (tmp - s < PADSIZE) {
 	*tmp++ = '0';
     }
+    
     *tmp-- = '\0';
+    
     while (tmp >= s) {
 	uint8_t c = *s;
 	*s++ = *tmp;

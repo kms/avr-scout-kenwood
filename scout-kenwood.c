@@ -29,42 +29,19 @@ void uartTx(const char *a) {
     }
 }
 
-void uartTx_P(const char *a) {
+void uartTx_P(PGM_P a) {
     while (pgm_read_byte_near(a)) {
 	loop_until_bit_is_set(UCSRA, UDRE);
 	UDR = pgm_read_byte_near(a++);
     }
 }
 
-int main(void) {
-    wdt_reset();
-    wdt_disable();
-
-    //    CLKPR = _BV(CLKPCE);
-    //    CLKPR = _BV(CLKPS0);
-
-    // Enable pull-ups
-    PORTA = 0xff;
-    PORTB = 0xff;
-    PORTD = 0xff;
-
-    DDRD = _BV(DDD1);
-
-    DIDR = _BV(AIN1D) | _BV(AIN0D);
-    ACSR = _BV(ACD);
-    
-    // USART
-    UCSRB = _BV(TXEN) | _BV(RXCIE) | _BV(RXEN);
-    UBRRL = 25;
-
-    c = fifoCreate(31);
+void controlLoop(void) {
+    c = fifoCreate(16);
     p = createParser();
-
+    
     char freq[12];
     uint16_t z = 0;
-
-    // Go!
-    sei();
 
     for (;;) {
 	if (!isFifoEmpty(c)) {
@@ -86,12 +63,36 @@ int main(void) {
 
 	_delay_ms(1);
     }
-
-    return 0;
 }
 
 ISR(USART_RX_vect) {
     while (UCSRA & _BV(RXC)) {
 	fifoPut(c, UDR);
     }
+}
+
+int main(void) {
+    wdt_reset();
+    wdt_disable();
+
+    //CLKPR = _BV(CLKPCE);
+    //CLKPR = _BV(CLKPS0);
+
+    PORTA = 0xff;
+    PORTB = 0xff;
+    PORTD = 0xff;
+
+    DDRD = _BV(DDD1);
+
+    DIDR = _BV(AIN1D) | _BV(AIN0D);
+    ACSR = _BV(ACD);
+    
+    UCSRB = _BV(TXEN) | _BV(RXCIE) | _BV(RXEN);
+    UBRRL = 25;
+    
+    sei();
+
+    controlLoop();
+
+    return 0;
 }

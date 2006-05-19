@@ -57,7 +57,7 @@ int main(void) {
     UCSRB = _BV(TXEN) | _BV(RXCIE) | _BV(RXEN);
     UBRRL = 25;
 
-    c = fifoCreate(20);
+    c = fifoCreate(31);
     p = createParser();
 
     char freq[12];

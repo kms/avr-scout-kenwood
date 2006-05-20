@@ -89,6 +89,9 @@ int main(void) {
     
     UCSRB = _BV(TXEN) | _BV(RXCIE) | _BV(RXEN);
     UBRRL = 25;
+
+    uartTx_P(PSTR("# Scout->Kenwood $Rev$ <kms@skontorp.net>\r\n"
+		"# " __TIMESTAMP_STRING__ "\r\n"));
     
     sei();
 

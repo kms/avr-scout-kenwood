@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include "fifo.h"
 
-enum states {DIGITS, COMPLETE};
+enum states {R, F, DIGITS, CARRIAGE_RETURN, NEWLINE, COMPLETE};
 
 typedef struct {
     enum states state;

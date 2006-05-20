@@ -41,7 +41,6 @@ void controlLoop(void) {
     p = createParser();
     
     char freq[12];
-    uint16_t z = 0;
 
     for (;;) {
 	if (!isFifoEmpty(c)) {
@@ -52,16 +51,9 @@ void controlLoop(void) {
 	    uartTx_P(PSTR("FQ "));
 	    intToPaddedString(roundFreq(parseInteger(p)), freq);
 	    uartTx(freq);
-	    uartTx_P(PSTR(",5\r\nLMP 1\r\n"));
-	    z = 0;
+	    uartTx_P(PSTR(",5\r\n"));
 	    resetParser(p);
 	}
-
-	if (z++ == 4096) {
-	    uartTx_P(PSTR("LMP 0\r\n"));
-	}
-
-	_delay_ms(1);
     }
 }
 
@@ -76,7 +68,7 @@ int main(void) {
     wdt_disable();
 
     //CLKPR = _BV(CLKPCE);
-    //CLKPR = _BV(CLKPS0);
+    //CLKPR = _BV(CLKPS1);
 
     PORTA = 0xff;
     PORTB = 0xff;
@@ -88,7 +80,7 @@ int main(void) {
     ACSR = _BV(ACD);
     
     UCSRB = _BV(TXEN) | _BV(RXCIE) | _BV(RXEN);
-    UBRRL = 25;
+    UBRRL = 23;
 
     uartTx_P(PSTR("\r\n"
 		"# Scout->Kenwood $Rev$ <kms@skontorp.net>\r\n"

@@ -57,7 +57,7 @@ void parseChar(parser *p, uint8_t c) {
 	    }
 	    break;
 	case NEWLINE:
-	    if (c == '\r') {
+	    if (c == '\n') {
 		p->state = COMPLETE;
 	    } else {
 		resetParser(p);

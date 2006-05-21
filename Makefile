@@ -1,3 +1,4 @@
+# $Id$
 #-----------------------------------------------------------------------------
 # ARM-GCC standard Makefile
 # This makefile is to be used by including it from a project-specific makefile

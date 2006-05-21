@@ -3,7 +3,7 @@
 #   of an ELF file for the AVR target.
 # Written by Jörg Wunsch and Eric B. Weddington
 # Released to the Public Domain
-
+# $Id$
 
 AWK=gawk
 AVRSIZE=avr-size

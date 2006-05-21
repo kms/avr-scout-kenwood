@@ -11,7 +11,7 @@
 
 typedef struct {
     uint32_t lower;
-    uint8_t step;
+    uint32_t step;
 } freq_bands;
 
 uint32_t roundFreq(uint32_t freq);

@@ -6,13 +6,27 @@
 
 #include "fRound.h"
 
-#define NUMBER_OF_BANDS 1
+#define NUMBER_OF_BANDS 6
 
 freq_bands bands[NUMBER_OF_BANDS] = {
-    {0, 0},
+    {0, 5},
+    {1, 5},
+    {2, 5},
+    {3, 5},
+    {4, 5},
+    {5, 5},
 };
 
-uint32_t steps[] = {12500};
+freq_steps steps[] = {
+    {1},
+    {5000},
+    {8333},
+    {9000},
+    {10000},
+    {12500},
+    {25000},
+    {50000},
+    {100000}};
 
 uint32_t roundFreq(uint32_t freq) {
     uint8_t band;
@@ -27,7 +41,7 @@ uint32_t roundFreq(uint32_t freq) {
 
     band--;
 
-    uint32_t step = steps[bands[band].step];
+    uint32_t step = steps[bands[band].step].step;
     r = freq % step;
 
     if (r >= (step / 2)) {

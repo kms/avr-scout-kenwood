@@ -37,9 +37,6 @@ void uartTx_P(PGM_P a) {
 }
 
 void controlLoop(void) {
-    c = fifoCreate(16);
-    p = createParser();
-    
     char freq[12];
 
     for (;;) {
@@ -54,6 +51,8 @@ void controlLoop(void) {
 	    uartTx_P(PSTR(",5\r\n"));
 	    resetParser(p);
 	}
+
+	wdt_reset();
     }
 }
 
@@ -66,6 +65,7 @@ ISR(USART_RX_vect) {
 int main(void) {
     wdt_reset();
     wdt_disable();
+    //wdt_enable(WDTO_2S);
 
     //CLKPR = _BV(CLKPCE);
     //CLKPR = _BV(CLKPS1);
@@ -81,6 +81,9 @@ int main(void) {
     
     UCSRB = _BV(TXEN) | _BV(RXCIE) | _BV(RXEN);
     UBRRL = 23;
+    
+    c = fifoCreate(16);
+    p = createParser();    
     
     sei();
 

@@ -65,7 +65,7 @@
   
 ### BLOCK 4) this defines the aims of the make process ###
 
-all:	$(TRG).elf $(TRG).hex $(TRG).eep $(TRG).ok
+all:	$(TRG).elf $(TRG).ok
 
 
 ### BLOCK 5) compile: instructions to create assembler and/or object files from C source ###
@@ -91,11 +91,11 @@ all:	$(TRG).elf $(TRG).hex $(TRG).eep $(TRG).ok
 
 ### BLOCK 9) create bin (.hex and .eep) files from elf output file ###
 
-%.hex: %.elf
-	$(BIN) -O $(FORMAT) -R .eeprom $< $@
+#%.hex: %.elf
+#	$(BIN) -O $(FORMAT) -R .eeprom $< $@
 
-%.eep: %.elf
-	$(BIN) -j .eeprom --set-section-flags=.eeprom="alloc,load" --change-section-lma .eeprom=0 -O $(FORMAT) $< $@
+#%.eep: %.elf
+#	$(BIN) -j .eeprom --set-section-flags=.eeprom="alloc,load" --change-section-lma .eeprom=0 -O $(FORMAT) $< $@
 
 ###### BLOCK 10) If all other steps compile ok then echo "Errors: none" ######
 

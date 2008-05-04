@@ -50,6 +50,7 @@
 	AVRLIB	= avrlib
 
 	TESTCC	= gcc
+	TESTCCFLAGS = -fprofile-arcs -ftest-coverage
 
 ### BLOCK 2) output format can be srec, ihex (avrobj is always created) ####
 
@@ -117,7 +118,10 @@ clean:
 	$(RM) $(TRG).eep
 	$(RM) $(TRG).hex
 	$(RM) *.bak
-	$(RM) *.log
+	$(RM) *.bb
+	$(RM) *.bbg
+	$(RM) *.da
+	$(RM) *.gcov
 	$(RM) $(TESTRUNNER)
 	@echo "Errors: none"
 	
@@ -130,5 +134,5 @@ up:
 #
 
 test:
-	$(TESTCC) -o $(TESTRUNNER) $(TESTABLES) $(TESTS) $(TESTRUNNER).c -lcheck
+	$(TESTCC) $(TESTCCFLAGS) -o $(TESTRUNNER) $(TESTABLES) $(TESTS) $(TESTRUNNER).c -lcheck
 	./$(TESTRUNNER)

@@ -8,6 +8,8 @@
 #include "fifo.h"
 #include "testSuites.h"
 
+#define NULL 0
+
 START_TEST(test_create) {
     fifo *f;
 

@@ -8,6 +8,8 @@
 #include "fRound.h"
 #include "testSuites.h"
 
+#define NULL 0
+
 START_TEST(test_simple) {
     fail_if(roundFreq(145600001UL) != 145600000UL);
     fail_if(roundFreq(145600020UL) != 145600000UL);

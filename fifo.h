@@ -1,7 +1,8 @@
-/*
- * Scout -> Kenwood
- * Karl-Martin Skontorp LA9PMA <kms@skontorp.net>
- * $Id$
+/* avr-scout-kenwood
+ * Scout output to Kenwood tuning commands.
+ *
+ * (c) Karl-Martin Skontorp <kms@skontorp.net> ~ http://picofarad.org/
+ * Licensed under the GNU GPL 2.0 or later.
  */
 
 #ifndef _FIFO_H

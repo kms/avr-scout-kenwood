@@ -30,9 +30,9 @@ START_TEST(test_parseChar) {
     fail_if(p->digits != 0);
 
     for (i = 1; i <= 9; i++) {
-	parseChar(p, 48 + i);
-	fail_if(p->state != DIGITS);
-	fail_if(p->digits != i);
+        parseChar(p, 48 + i);
+        fail_if(p->state != DIGITS);
+        fail_if(p->digits != i);
     }
 
     parseChar(p, '0');
@@ -198,19 +198,19 @@ START_TEST(test_parseInteger) {
 } END_TEST
 
 START_TEST(test_intToPaddedString) {
-	char s[16];
+        char s[16];
 
-	intToPaddedString(8, s);
-	fail_if(strlen(s) != 11);
-	fail_if(strcmp(s, "00000000008") != 0);
+        intToPaddedString(8, s);
+        fail_if(strlen(s) != 11);
+        fail_if(strcmp(s, "00000000008") != 0);
 
-	intToPaddedString(1234567890, s);
-	fail_if(strlen(s) != 11);
-	fail_if(strcmp(s, "01234567890") != 0);
+        intToPaddedString(1234567890, s);
+        fail_if(strlen(s) != 11);
+        fail_if(strcmp(s, "01234567890") != 0);
 
-	intToPaddedString(54321, s);
-	fail_if(strlen(s) != 11);
-	fail_if(strcmp(s, "00000054321") != 0);
+        intToPaddedString(54321, s);
+        fail_if(strlen(s) != 11);
+        fail_if(strcmp(s, "00000054321") != 0);
 } END_TEST
 
 Suite *parser_suite(void) {

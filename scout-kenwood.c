@@ -25,15 +25,15 @@ parser *p;
 
 void uartTx(const char *a) {
     while (*a) {
-	loop_until_bit_is_set(UCSRA, UDRE);
-	UDR = *a++;
+        loop_until_bit_is_set(UCSRA, UDRE);
+        UDR = *a++;
     }
 }
 
 void uartTx_P(PGM_P a) {
     while (pgm_read_byte_near(a)) {
-	loop_until_bit_is_set(UCSRA, UDRE);
-	UDR = pgm_read_byte_near(a++);
+        loop_until_bit_is_set(UCSRA, UDRE);
+        UDR = pgm_read_byte_near(a++);
     }
 }
 
@@ -41,25 +41,25 @@ void controlLoop(void) {
     char freq[12];
 
     for (;;) {
-	if (!isFifoEmpty(c)) {
-	    parseChar(p, fifoGet(c));
-	}
+        if (!isFifoEmpty(c)) {
+            parseChar(p, fifoGet(c));
+        }
 
-	if (p->state == COMPLETE) {
-	    uartTx_P(PSTR("FQ "));
-	    intToPaddedString(roundFreq(parseInteger(p)), freq);
-	    uartTx(freq);
-	    uartTx_P(PSTR(",5\r\n"));
-	    resetParser(p);
-	}
+        if (p->state == COMPLETE) {
+            uartTx_P(PSTR("FQ "));
+            intToPaddedString(roundFreq(parseInteger(p)), freq);
+            uartTx(freq);
+            uartTx_P(PSTR(",5\r\n"));
+            resetParser(p);
+        }
 
-	wdt_reset();
+        wdt_reset();
     }
 }
 
 ISR(USART_RX_vect) {
     while (UCSRA & _BV(RXC)) {
-	fifoPut(c, UDR);
+        fifoPut(c, UDR);
     }
 }
 

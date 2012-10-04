@@ -45,8 +45,8 @@ START_TEST(test_overflow) {
     fifoPut(f, 2);
     fifoPut(f, 3);
     
-    fail_if(fifoGet(f) != 0);
-    fail_if(fifoGet(f) != 1);
+    fail_if(fifoGet(f) != 2);
+    fail_if(fifoGet(f) != 3);
     fail_if(isFifoEmpty(f) == 0);
 } END_TEST
 

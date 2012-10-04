@@ -13,27 +13,21 @@ uint8_t isFifoEmpty(const fifo *c) {
 } 
 
 uint8_t fifoGet(fifo *c) {
-    c->read = c->read & c->capacity;
-    c->unconsumed--;
-    return c->buffer[c->read++];
+    c->unconsumed %= c->capacity;
+    return c->buffer[(c->write - c->unconsumed--) % c->capacity];
 }       
 
 void fifoPut(fifo *c, const uint8_t p) {
-    if (c->unconsumed > c->capacity) {
-        return;
-    }
-    c->write = c->write & c->capacity;
-    c->buffer[c->write++] = p;
+    c->buffer[c->write++ % c->capacity] = p;
     c->unconsumed++;
 }
 
 fifo* fifoCreate(const uint8_t capacity) {
     fifo *f = malloc(sizeof(fifo) + (capacity * sizeof(uint8_t)));
 
-    f->read = 0;
     f->write = 0;
     f->unconsumed = 0;
-    f->capacity = capacity - 1;
+    f->capacity = capacity;
 
     return f;
 }   
